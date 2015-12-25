@@ -1,0 +1,216 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>头像上传</title>
+<style type="text/css">
+*{margin:0;padding:0;}
+</style>
+<script>
+	var upLoadPic = function (picBoxID,bigPreID,smlPreID,imgInputID){
+		var picBox = document.getElementById(picBoxID);
+		var bigPre = document.getElementById(bigPreID);
+		var smlPre = document.getElementById(smlPreID);
+		var imgInput = document.getElementById(imgInputID);
+		var imgWrap;
+		var img;
+		var picSltBox;
+		var picRizeBox;
+		var imgIniSize = {w:0,h:0}
+		var picSltBoxIniCrood = {x:0,y:0};//点下时鼠标位置偏移选择框的位置
+		var sltBoxMin = 5;
+		picUploadIni();
+		function picUploadIni(){//alert(111111111)
+			imgWrap = document.createElement("div");
+			picSltBox = document.createElement("div");
+			picRizeBox = document.createElement("div");
+
+			imgWrap.style.position="absolute";
+			imgWrap.style.display="none";
+			imgWrap.id = "imgWrap";
+
+			picSltBox.style.cursor = "move";
+			picSltBox.style.position = "absolute";
+			picSltBox.style.width = "100px";
+			picSltBox.style.height = "100px";
+			picSltBox.style.left = "0";
+			picSltBox.style.top = "0";
+			picSltBox.style.border = "2px solid black";
+
+			var sltBoxBg = document.createElement("div");
+			sltBoxBg.style.width = "100%";
+			sltBoxBg.style.height = "100%";
+			sltBoxBg.style.background = "#fff";
+			sltBoxBg.style.filter = "alpha(opacity=50)";
+			sltBoxBg.style.opacity = "0.5";
+
+			picRizeBox.id = "picRizeBoxID"
+			picRizeBox.style.cursor = "se-resize";
+			picRizeBox.style.position = "absolute";
+			picRizeBox.style.width = "6px";
+			picRizeBox.style.height = "6px";
+			picRizeBox.style.bottom = "0px";
+			picRizeBox.style.right = "0px";
+			picRizeBox.style.background = "black";
+
+			picSltBox.appendChild(sltBoxBg);
+			picSltBox.appendChild(picRizeBox);
+			imgWrap.appendChild(picSltBox);
+			picBox.appendChild(imgWrap);
+
+			document.onselectstart=function(){return false;}; 
+			document.onselect=function(){document.selection.empty()};
+			document.documentElement.onmouseup = function(ev){
+				document.body.style.cursor = "";
+				document.documentElement.onmousemove=null;
+				var event = ev?ev:window.event;
+				//sltBoxMove(event);				
+				//alert("up");
+			}
+			
+			picSltBox.onmousedown = function(ev){
+				var event = ev?ev:window.event;
+				var target = event.target||event.srcElement;
+				picSltBoxIniCrood.x = event.clientX - picSltBox.getBoundingClientRect().left;
+				picSltBoxIniCrood.y = event.clientY - picSltBox.getBoundingClientRect().top;
+				if(target.id==picRizeBox.id){
+					document.body.style.cursor = "se-resize";
+					document.documentElement.onmousemove =function(ev){var event = ev?ev:window.event;sltBoxResize(event);}
+				}else{
+					document.documentElement.onmousemove = function(ev){var event = ev?ev:window.event;sltBoxMove(event);};
+				}
+			
+			}
+
+			imgInput.onclick = function(){changeImg();}
+
+		}
+		function changeImg(){
+			imgWrap.getElementsByTagName("img").length>0&&imgWrap.removeChild(img);
+			img = new Image();
+			img.src = "pic/touxiang.png";
+			var t = setInterval(function(){
+				if (img.width==0) {
+					return;
+				}
+				clearInterval(t);
+				imgIniSize.w = img.width;
+				imgIniSize.h = img.height;
+				//alert(imgIniSize.w+"......"+imgIniSize.h)
+				if((picBox.clientWidth-img.width)<(picBox.clientHeight-img.height)){
+					img.style.width = picBox.clientWidth+"px";
+					img.style.height = "auto";
+					imgWrap.style.width = img.style.width;
+					imgWrap.style.height = parseInt(img.style.width)*img.height/img.width+"px";				
+				}else{
+					img.style.height = picBox.clientHeight+"px";
+					img.style.width = "auto";				
+					imgWrap.style.height = img.style.height;
+					imgWrap.style.width = parseInt(img.style.height)*img.width/img.height+"px";			
+				}
+
+				imgWrap.appendChild(img)
+				
+				imgWrap.style.left = (picBox.clientWidth- parseInt(imgWrap.style.width))/2+"px";
+				imgWrap.style.top = (picBox.clientHeight- parseInt(imgWrap.style.height))/2+"px";
+				imgWrap.style.display = "block";
+			},200)
+
+		}
+
+		function sltBoxResize(event){
+			var width = parseInt(event.clientX)-picSltBox.getBoundingClientRect().left;
+			var height = parseInt(event.clientY)-picSltBox.getBoundingClientRect().top;
+			if(width<sltBoxMin){width = sltBoxMin;}
+			if(width>(imgWrap.clientWidth-parseInt(picSltBox.style.left))){
+				width = imgWrap.clientWidth-parseInt(picSltBox.style.left)-(picSltBox.offsetWidth-picSltBox.clientWidth);
+			}
+			if(height<sltBoxMin){height = sltBoxMin;}
+			if(height>(imgWrap.clientHeight-parseInt(picSltBox.style.top))){
+				height = imgWrap.clientHeight-parseInt(picSltBox.style.top)-(picSltBox.offsetHeight-picSltBox.clientHeight);
+			}
+			var len = width<height?width:height;
+			picSltBox.style.width = len+"px";
+			picSltBox.style.height = len+"px";
+			picReview(bigPre);
+			picReview(smlPre);
+		}
+		function sltBoxMove(event){
+			var leftOffset = parseInt(event.clientX)-(picSltBoxIniCrood.x+picSltBox.getBoundingClientRect().left);
+			var topOffset = parseInt(event.clientY)-(picSltBoxIniCrood.y+picSltBox.getBoundingClientRect().top);
+			var left = parseInt(picSltBox.style.left)+leftOffset;
+			var top = parseInt(picSltBox.style.top)+topOffset;
+			if(left<0){left = 0}
+			if(left>(imgWrap.clientWidth-picSltBox.offsetWidth)){left = imgWrap.clientWidth-picSltBox.offsetWidth;}
+			if(top<0){top = 0}
+			if(top>(imgWrap.clientHeight-picSltBox.offsetHeight)){top = imgWrap.clientHeight-picSltBox.offsetHeight;}
+			picSltBox.style.left = left+"px";
+			picSltBox.style.top = top+"px";
+			picReview(bigPre);
+			picReview(smlPre);
+			/*tip.innerHTML = "event.clientX         ===== "+event.clientX+"----<br/>"+
+							"event.clientY         ===== "+event.clientY+"----<br/>"+
+							"picSltBoxIniCrood.x   ===== "+picSltBoxIniCrood.x+"----<br/>"+
+							"picSltBoxIniCrood.y   ===== "+picSltBoxIniCrood.y+"----<br/>"+
+							"leftOffset            ===== "+leftOffset+"----<br/>"+
+							"topOffset             ===== "+topOffset+"----<br/>"+
+							"picSltBox.style.left  ===== "+picSltBox.style.left+"----<br/>"+
+							"picSltBox.style.top   ===== "+picSltBox.style.top+"----<br/>"+
+							"imgWrap.clientWidth    ===== "+imgWrap.clientWidth+"----<br/>"+
+							"picSltBox.clientWidth ===== "+picSltBox.clientWidth+"----<br/>"+
+							"imgWrap.clientHeight   ===== "+imgWrap.clientHeight+"----<br/>"+
+							"left          		   ===== "+left+"----<br/>"+
+							"top          		   ===== "+top+"----<br/>";*/
+		}
+
+		function picReview(reviewBox){
+			reviewBox.innerHTML="";	
+			var imgReview = new Image();
+			imgReview.src = img.src
+			imgReview.width = imgWrap.clientWidth*reviewBox.clientWidth/picSltBox.clientWidth;
+			imgReview.height = imgWrap.clientHeight*reviewBox.clientHeight/picSltBox.clientHeight;
+			imgReview.style.position = "absolute";
+			imgReview.style.left = -parseInt(picSltBox.style.left)*reviewBox.clientWidth/picSltBox.clientWidth+"px";
+			imgReview.style.top = -parseInt(picSltBox.style.top)*reviewBox.clientHeight/picSltBox.clientHeight+"px";
+			reviewBox.appendChild(imgReview);
+		}
+	}
+	window.onload = function(){
+		upLoadPic("pic_box","big_pic","sml_pic","slt_pic_input")
+	}
+
+</script>
+</head>
+
+<body>
+<div id="tip" style="float:right;border:1px solid red; width:300px; height:500px;"></div>
+
+<div style="float:left;margin-left:50px; margin-top:50px;moz-user-select: -moz-none; 
+-moz-user-select: none; 
+-o-user-select:none; 
+-khtml-user-select:none;
+-webkit-user-select:none; 
+-ms-user-select:none; 
+user-select:none;">
+	<div id = "pic_box" style = "float:left;position:relative;border:2px solid #999; width:400px; height:400px; ">
+	<!--<div class="imgWrap" id="imgWrap" style="position:absolute;">			
+			<div id="pic_slt_rect" style=" cursor:move; position:absolute; width:100px; height:100px; border:2px solid black; top:0px; left:0px;">
+				<div style="width:100%; height:100%; background:#fff;  filter:alpha(opacity=50); opacity:0.5; " ></div>
+				<div id="pic_slt_resize_c" style=" cursor:se-resize;width:6px; height:6px; background:black; position:absolute; bottom:0px; right:0px;"></div>
+			</div>
+		</div>-->
+	</div>
+
+
+
+
+
+	<div style="float:left;margin-left:50px;">
+		<div style="position:relative; overflow:hidden;border:2px solid #333;width:200px; height:200px; margin-bottom:30px;" id="big_pic"></div>
+		<div style="position:relative; overflow:hidden;border:2px solid #333;width:100px; height:100px;" id="sml_pic"></div>
+	</div>
+	<input type="button" value="选择图片" id = "slt_pic_input">
+</div>
+
+</body>
+</html>

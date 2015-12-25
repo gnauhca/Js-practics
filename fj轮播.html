@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>mhlunbo</title>
+<style type="text/css">
+*{margin:0;padding: 0;}
+ul,li{list-style: none;}
+.play_area{margin:0 auto; margin-top:50px;width:380px; height: 470px;border:1px solid #000; overflow: hidden; position:relative;}
+.box{margin:0 auto; width:282px; margin-top: 24px; height: 350px;border:1px solid #000; overflow: hidden; position:relative;}
+.scrollBox{height:300px; }
+.scrollBox li{float:left; width:290px;height:300px; border:1px solid #edfabc;}
+.scrollBox li img{width:290px; height:350px;}
+.play_area span{display:inline; font-size: 50px; cursor:pointer;}
+#lbtn{position:absolute;top:370px; left:90px;}
+#rbtn{position:absolute;top:370px; right:90px;}
+</style>
+
+</head>
+
+<body>
+<div style="margin:0 auto;margin-top:20px; width:280px;">
+waitTime:
+<div id='tip' style='width:150px; border:2px solid #abdedf; float:right'>
+	<div id="waitBarEle" style = "height:15px; width:0px; background:#86b;"></div>
+</div>
+</div>
+
+<div style="margin:0 auto;margin-top:20px; width:280px;">
+playTime:
+<div id='tip' style='width:150px; border:2px solid #abdedf; float:right'>
+	<div id="playBarEle" style = "height:15px; width:0px; background:#37b;"></div>
+</div>
+</div>
+
+<div class = "play_area">
+	<span id="lbtn" href=" javascript:void(0)">1</span>
+	<span id="rbtn" href=" javascript:void(0)">2</span>
+<div class="box" id="outBox">
+
+	<ul class="scrollBox" id="scrollBox">
+		<li>1<img src="pic/01.jpg" alt=""></li>
+		<li>2<img src="pic/02.jpg" alt=""></li>
+	</ul>
+</div>
+</div>
+
+<script type="text/javascript">
+var mhLunBo = function(outBoxId,scrollBoxId,scrollItemName,lBtnId,rBtnId,direction){
+	var outBox = document.getElementById(outBoxId);
+	var scrollBox = document.getElementById(scrollBoxId);//alert(scrollBox)
+	var item1 = scrollBox.getElementsByTagName(scrollItemName)[0];
+	var item2 = scrollBox.getElementsByTagName(scrollItemName)[1];
+	var btn1 = document.getElementById(lBtnId);
+	var btn2 = document.getElementById(rBtnId);
+	var iniDir = direction;
+	var dir = iniDir;
+	var waitTime = 2000; 
+	var nextTime; 
+	var speedForAuto = 10; 
+	var speedForHand= 20;
+	var speed=speedForAuto;
+	var play_time;
+	var onePlayFinish = true;
+	var init = function(){
+		scrollBox.style.width=item1.offsetWidth+item2.offsetWidth+"px";
+		btn1.onclick = function(){
+			playWhich(item1);
+		}
+		btn2.onclick = function(){
+			playWhich(item2);
+		}
+		
+		play();
+	}
+	var play = function(){//console.log(1)
+		if(dir==1){
+			
+		}else{
+			outBox.scrollLeft=outBox.offsetWidth;
+			scrollBox.appendChild(scrollBox.removeChild(scrollBox.getElementsByTagName("li")[0]));
+		}
+		playTime=setInterval(function(){
+			onePlayFinish=false;
+			if(dir==1){
+				if(outBox.scrollLeft<outBox.offsetWidth){
+					outBox.scrollLeft+=speed;
+				}else{
+					outBox.scrollLeft=0;
+					scrollBox.appendChild(scrollBox.removeChild(scrollBox.getElementsByTagName("li")[0]));
+					playFinish();		
+				}
+
+			}else{
+				if(outBox.scrollLeft>0){
+					outBox.scrollLeft-=speed;
+				}else{
+					outBox.scrollLeft=0;
+					playFinish();										
+				}
+
+			}
+		},30);
+	}
+	var playFinish = function(){
+		clearInterval(playTime);
+		onePlayFinish=true;
+		nextTime = setTimeout(function(){play()},waitTime);
+		dir=iniDir;
+		speed=speedForAuto
+	}
+	var playWhich = function(item){
+		speed=speedForHand;
+		if(onePlayFinish){
+			clearTimeout(nextTime);//alert(itemL)
+			if(item==scrollBox.getElementsByTagName("li")[0]){
+				nextTime = setTimeout(function(){play()},waitTime);	
+				speed = speedForAuto;
+			}else{
+				play();
+			}			
+		}else{
+			if(item==scrollBox.getElementsByTagName("li")[0]){
+				dir=-1;
+			}else{
+
+			}
+		}
+
+	}
+	init();		
+}
+mhLunBo("outBox","scrollBox","li","lbtn","rbtn",1);
+
+</script>
+
+</body>
+</html>

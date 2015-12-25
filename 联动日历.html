@@ -1,0 +1,286 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title> New Document </title>
+<meta name="Generator" content="EditPlus">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<meta http-equiv='content-type' content='text/html;charset=utf-8'>
+<style>
+	*{margin:0;padding:0;}
+	input{margin:20px;}
+	#div1{margin:20px;display: none;}
+	#nowTime,#nextTime{float: left;margin-right: 150px;}	
+	.title{background: #abcdef;width:400px;text-align: center;position:relative;}
+	.l{position: absolute;left:5px; }
+	.r{position: absolute;right:5px;}
+	.c{margin: 0 auto;}
+	table{width:400px;border:1px solid #abcdef; border-collapse:collapse;}
+	table th,td{border:1px solid #abcdef;width:60px;height:40px;text-align: center;}
+	table th{background: #008855;}
+	.red{color: red;}
+	.blue{color:blue;}
+	table td p{color:red;}
+</style>
+<script src='jquery.js'></script>
+<script type='text/javascript'>
+window.onload=function(){
+	var inputs=document.getElementsByTagName('input');
+	var inputYearEle = inputs[0];
+	var inputMonthEle = inputs[1];
+	var inputBtn = inputs[2];
+	var oDiv=$('#div1')[0];
+	var oNowTime=$('#nowTime')[0];
+	var oNextTime=$('#nextTime')[0];
+	var hasBeenShow=false;
+
+	
+	var oDate=new Date();
+	
+	setNewCal(oDate.getFullYear(),oDate.getMonth()+1);
+
+	hasBeenShow=true;	
+
+	inputBtn.onclick=function(){
+		setNewCal(inputYearEle.value,inputMonthEle.value);
+
+	}
+
+	$('.title')[0].onclick = function(){
+		var spans = this.getElementsByTagName('span');
+		var newMonth = spans[0].innerHTML; 
+		var newYear = spans[1].innerHTML
+		if(newMonth=='12'){
+			newYear--;
+		}
+		setNewCal(newYear,newMonth);
+	}
+
+	$('.title')[1].onclick = function(){
+		var spans = this.getElementsByTagName('span');
+		var newMonth = spans[0].innerHTML; 
+		var newYear = spans[1].innerHTML
+		if(newMonth=='2'){
+			newYear--;
+		}
+		setNewCal(newYear,newMonth-1);
+	}
+
+
+
+	function setNewCal(thisYear,thisMonth){
+		$('#div1').hide();
+		var tables = document.getElementsByTagName('table');
+		for(var i=tables.length-1;i>=0;i--){
+			tables[i].parentNode.removeChild(tables[i]);
+		}
+		var date = new Date();
+		date.setFullYear(thisYear)
+		date.setMonth(thisMonth-1);
+		showDate(oNowTime,date);//当前月
+		date.setMonth(((date.getMonth()+1)%12)||0)
+		if(date.getMonth()==0){date.setFullYear(date.getFullYear()+1)}
+		showDate(oNextTime,date);//下月
+		$('#div1').fadeIn(500);
+	}
+}	
+	var weeks=['周日','周一','周二','周三','周四','周五','周六'];
+
+	function showDate(divBox,dateObj){
+		
+		var oDivs=divBox.getElementsByTagName('div');
+		for(var i=0;i<oDivs.length;i++){
+			if(oDivs[i].className=='l'||oDivs[i].className=='r'){
+				oDivs[i].innerHTML='<span>'+((dateObj.getMonth()+1+(oDivs[i].className=='l'?-1:1))||12)+'</span>月'; 
+			}else if(oDivs[i].className=='c'){
+				oDivs[i].innerHTML='<span>'+dateObj.getFullYear()+'</span>年<span>'+(dateObj.getMonth()+1)+'</span>月';
+			}
+		}
+
+		var table = document.createElement('table');
+		var thead = document.createElement('thead');
+		var theadTr = document.createElement('tr');		
+		for (var i = 0; i < 7; i++) {
+			var th = document.createElement('th');
+			th.innerHTML = weeks[i];			
+			if(i==0||i==6){
+				th.className='red'
+			}
+			theadTr.appendChild(th);
+		};
+		thead.appendChild(theadTr);
+
+		var tbody = document.createElement('tbody');
+		dateObj.setDate(1);
+		var preMonthDay = getMonthDayNum(dateObj.getFullYear(),(dateObj.getMonth()+1-1)||12);
+		var thisMonthDay = getMonthDayNum(dateObj.getFullYear(),dateObj.getMonth()+1);
+		var firstWeekDay = dateObj.getDay();
+		var rowNum = parseInt((firstWeekDay-1+thisMonthDay)/7)+1;
+		var iDay = (preMonthDay-firstWeekDay+1);
+		if(iDay>preMonthDay)iDay=1;
+
+		//console.log('年：'+dateObj.getFullYear()+'  月-1：'+dateObj.getMonth()+' 第一天星期：'+firstWeekDay+'  preMonthDay: '+preMonthDay+'  thisMonthDay: '+thisMonthDay+' iday :'+iDay);
+
+		var firstTr = document.createElement('tr');
+		for(var i=0;i<7;i++){
+			var td = document.createElement('td')
+			td.innerHTML=iDay;
+			firstTr.appendChild(td)
+			if(iDay==preMonthDay){
+				iDay=1;
+			}else{
+				iDay++;
+			}
+		}
+		tbody.appendChild(firstTr);
+
+		for(var i=0;i<rowNum-2;i++){
+			var tr = document.createElement('tr');
+				for(var j=0;j<7;j++){
+					var td = document.createElement('td');
+					td.innerHTML=iDay;
+					tr.appendChild(td);
+					iDay++;
+				}
+			tbody.appendChild(tr);
+		}
+
+		var lastTr = document.createElement('tr');
+		for(var i=0;i<7;i++){
+			var td = document.createElement('td')
+			td.innerHTML=iDay;
+			lastTr.appendChild(td)
+			if(iDay==thisMonthDay){
+				iDay=1;
+			}else{
+				iDay++;
+			}
+		}
+		tbody.appendChild(lastTr);
+
+		table.appendChild(thead);
+		table.appendChild(tbody);
+
+		var tds = table.getElementsByTagName('td');
+		for(i=tds.length+1;i>0;i--){
+			if(i%7==0){
+				tds[i-1].className='red';
+				tds[i-7].className='red';
+			}
+		}
+
+		divBox.appendChild(table);
+
+
+
+	}
+
+	
+
+
+
+function getMonthDayNum(year,month){
+	var isYun = false;
+	var resDay;
+	if(year%4==0&&year%400!=0){
+		isYun=true;
+	}
+	if(month==2){
+		isYun?resDay=29:resDay=28;
+	}else if(month==4||month==6||month==9||month==11){
+		resDay=30;
+	}else{
+		resDay=31;
+	}
+	return resDay;
+}
+
+</script>
+</head>
+
+<body>
+<input type='text'/><input type='text'/><input type='button' value='确定'/>
+<div id="div1">
+	<div id="nowTime">
+		<div class="title">
+			<div class="l"><span>3</span>月</div>
+			<div class="c"><span>2000</span>年<span>3</span>月</div>
+		</div>
+<!-- 		<table>
+	<thead>
+		<tr>
+			<th>周一</th>
+			<th>周二</th>
+			<th>周三</th>
+			<th>周四</th>
+			<th>周五</th>
+			<th class="red">周六</th>
+			<th class='red'>周日</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+			<td>1<p>200</p></td>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+		</tr>
+	</tbody>
+</table> -->
+	</div>
+	<div id="nextTime">
+		<div class="title">
+			<div class="r"><span>3</span>月</div>
+			<div class="c"><span>2000</span>年<span>3</span>月</div>
+		</div>
+
+<!-- 		<table>
+	<thead>
+		<tr>
+			<th>周一</th>
+			<th>周二</th>
+			<th>周三</th>
+			<th>周四</th>
+			<th>周五</th>
+			<th class="red">周六</th>
+			<th class='red'>周日</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+			<td>1<p>200</p></td>
+			<td>1</td>
+			<td>1</td>
+			<td>1</td>
+		</tr>
+	</tbody>
+</table> -->
+	</div>
+</div>
+</body>
+</html>

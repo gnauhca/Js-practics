@@ -1,0 +1,11 @@
+$.zzc={
+	centerDiv:function(div){
+		div.animate({
+			marginTop:($(window).height()-div.height())/2+'px',
+			marginLeft:($(window).width()-div.width())/2+'px'
+		})
+		
+	
+	}
+	
+}

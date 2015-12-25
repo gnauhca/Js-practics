@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title> 模仿微博发布框 </title>
+<meta name="Generator" content="EditPlus">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<meta http-equiv='content-type' content='text/html;charset=utf-8'>
+<script src='jquery.js'></script>
+<style>
+body{font-size:12px;}
+#div1{width:400px;margin:20px auto;}
+#div1 p{float:right;margin:0;}
+#div1 textarea{width:400px;height:100px;}
+#div1  a{width:50px;height:30px;font-size:16px;line-height:30px;text-align:center;float:right;background:#abcdef;color:#fff;text-decoration:none;  }
+#div1 a.dis{background:#ccc;color:#666;}
+</style>
+<script type='text/javascript'>
+window.onload=function(){
+	var oDiv=div1;
+	var oP=op;
+	var oT=te;
+	var a=aa;
+	var maxChar=140;
+	var nowNum=0;
+	var legal=false;
+
+
+
+	oT.onfocus=function(){
+		if(oT.value.length==0)
+		oP.innerHTML='发布请遵守社区公约，还可以输入140个字';
+		legal=false;
+	};
+	oT.onblur=function(){
+		if(oT.value.length==0){
+			oP.innerHTML='愿得一学霸，白首不相离。带我上自习，一日刷千题'
+		}
+	}
+	change=function(){
+		//alert(oT.value.charCodeAt(oT.value.length-1)<0x007f)
+		var tLength=getLength(oT.value)
+		if(tLength>140){
+			oP.innerHTML='发布请遵守社区公约，已超过'+(tLength-maxChar)+'个字';
+			a.className='dis';
+			legal=false;
+		}else if(tLength>0){
+			oP.innerHTML='发布请遵守社区公约，还可以输入'+(maxChar-tLength)+'个字';
+			a.className='';
+			legal=true;
+
+		}
+	}
+	function getLength(str){
+		str=str.toString();
+		var cut=0;
+		for(var i=0;i<str.length;i++){
+			
+			if(str.charCodeAt(i) < 0xff){
+				//console.log(str.charAt(i)+"  "+str.charCodeAt(i)+(str.charCodeAt(i)<0xff))
+				cut++;
+			}
+		}
+		
+		return str.length-parseInt(cut/2);
+	}
+	a.onclick=function(){
+		if(legal==false){
+			return false;
+		}
+	}
+	if(typeof oT.oninput=='undefined'){
+        oT.onpropertychange=change;
+	}else{
+		oT.oninput=change;
+	}
+
+}
+alert(0<9<6)
+
+</script>
+</head>
+
+<body>
+
+<div id='div1' style=''>
+<p id='op'>愿得一学霸，白首不相离。带我上自习，一日刷千题</p>
+<textarea id='te'></textarea>
+<a href='http://www.baidu.com' class='dis' id='aa'>发布</a>
+<div>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>猜数字</title>
+<style type="text/css">
+* {padding: 0; margin: 0;}
+ input,div, textarea{ font-family:"微软雅黑"; border-radius: 6px; box-shadow: 3px 3px 10px #333;}
+}
+ 
+.choosemodel{width:600px; height:105px; line-height:100px; margin:0 auto; margin-top:200px; font-size:50px;}
+.choosemodel select{width:100px; height:100px; font-size:50px; line-height:100px; margin-left:10px;}
+.label{float:left; line-height:130px;}
+#start{width:200px; height:100px; font-size:50px; text-align:center; line-height:130px;}
+ 
+.gamearea{width:700px; height:400px; margin-left:80px; margin-top:100px; float: left}
+.key{height:105px; margin:0 auto; margin-top:24px; line-height:100px;}
+.keylabel{width:200px;float:left; height:100px; font-size:50px; }
+.keynum{height:100px; width:100px; float:left; text-align:center; font-size:50px; background:#383838; color:#E8E8E9; margin-left:10px;}
+
+.user{height:105px; margin:0 auto; margin-top:24px; line-height:100px;}
+.userlabel{width:200px;float:left; height:100px; font-size:50px; }
+.usernumarea{height:100px; float:left;font-size:50px; line-height:100px; }
+.usernum{height:100px; width:100px; float:left;font-size:50px; line-height:100px; background:#D6D6D6; margin-left:10px; border:solid #AFAFAF ;; border-bottom:3px; border-right:2px;}
+
+.gobutton{width:200px; height:100px; cursor:pointer; background:#5F7361; font-size:50px; line-height:100px; text-align:center; margin-top:20px; float:left; margin-right:10px; color:#CCC;}
+
+.tips{float: right; margin-right: 30px; font-size:20px; color:#FFF;}
+</style>
+
+<script type="text/javascript" language="javascript">
+window.onload = function(){new Game(4);
+					$("start").onclick = function(){
+											$("choosemodel").style.display="none";
+											$("gamearea").style.display = "block"
+										 	new Game(parseInt($("model").value));
+										 	
+										 }
+					
+				
+				}
+var model = 0;
+function $(id){return document.getElementById(id);}
+function createObject(){
+	return function(){this.initialize.apply(this,arguments);}
+}
+function Bind(obj,fun){
+	return function(){
+		fun.apply(obj,arguments)
+	}	
+}
+function $class(classname){
+	var context = arguments[1]?arguments[1]:document.getElementsByTagName("body")[0];//alert(context)
+	var resdomarr=[];
+	var key=0;
+	if(context.className == classname){
+		resdomarr[key++] = context;
+
+	}
+	if(context.hasChildNodes()){
+		for(var i=0; i<context.childNodes.length;i++){
+			var reschilddom = $class(classname,context.childNodes[i]);
+			for(var j=0;j<reschilddom.length;j++){
+				resdomarr[key++] = reschilddom[j];	
+			}
+		}
+	}
+	return resdomarr;
+}
+
+var Game = createObject();
+Game.prototype = {
+	initialize:function(num){//alert(model);
+			   		model = num;
+					this.generateInterface(model);
+					this.keyNum = this.generateKey(model);//alert(this.key);
+					this.playButton.onclick = Bind(this,this.play);
+					this.exitButton.onclick = Bind(this,this.exit);
+					this.replayButton.onclick = Bind(this,this.replay);
+					
+							   
+			   },
+	//生成界面
+	generateInterface:function(model){
+				    this.key = $class("key")[0];
+					this.user = $class("user")[0];
+					//alert(this.key.className)
+					for(var i=0;i<model;i++){
+						var key = document.createElement("div");
+						key.className = "keynum";
+						key.innerHTML = "?";
+						key.id = "key"+i;
+						this.key.appendChild(key);
+						
+						var user = document.createElement("input");
+						user.className = "usernum";
+						user.type = "text";
+						user.id = "user"+i;
+						this.user.appendChild(user);
+					}
+					this.playButton = $("gobutton");
+					this.exitButton = $("exitbutton")
+					this.replayButton = $("replaybutton");
+			   },
+	
+	//生成答案数组
+	generateKey:function(num){
+					var keyArr = [];
+					for(var i=0;i<num;i++){
+						while(true){
+							var newNum = Math.floor(Math.random()*9) + 1;
+							var useless = 0;
+							for(var j=0;j<keyArr.length;j++){
+								if(newNum==keyArr[j]){
+									useless = 1; break;
+								}
+							}
+							if(useless!=1){
+								keyArr[keyArr.length]=newNum; break;
+							}
+						}					
+					}
+					return keyArr;   				   
+			   },
+	replay:function(){
+		       		var keys = $class("keynum",this.key);
+					var user = $class("usernum",this.user);
+					for(var i=0;i<keys.length;i++){
+						keys[i].innerHTML = "?";					
+					}
+					for(var i=0;i<user.length;i++){
+						user[i].value = "";					
+					}
+					$("tips").value = "";
+					
+			   
+			   
+			   
+			   },
+    exit:function(){
+			   			
+			   	
+			   
+			   
+			   },
+	play:function(){
+		       		//alert(this.key)	
+					if(!this.checkInput()){return}
+					var input =  $class("usernum",this.user);
+					this.userAnswer = [];
+					for(var i=0; i<input.length; i++){
+						this.userAnswer[i] = input[i].value;				
+					}
+			   		//alert(this.userAnswer)
+					this.matching();
+			   
+			   
+			   },
+	checkInput:function(){
+					var input = $class("usernum",this.user);//alert(input[0].value);
+					var pattern = /^[0-9]$/gi;
+			   		for(var i=0; i<input.length; i++){//alert(i+"--"+input[i].value)
+						if(pattern.test(input[i].value)==false){alert("输入0-9之间的数字");return;}
+						pattern.lastIndex=0;					
+					}
+					for(var j=0;j<input.length; j++){
+						for(var k=j+1;k<input.length;k++){
+							if(input[j].value==input[k].value){
+								alert("有重复的数字"); return;
+							}
+						}
+					
+					}	
+					return true;		   
+			   },
+	matching:function(){
+					var A=0; 
+					var B=0;
+					var input="";
+	   				for(var i=0; i<model; i++){
+						if(this.userAnswer[i]==this.keyNum[i]){
+							A++;
+						}else{
+							for(var j=0;j<model;j++){
+								if(this.userAnswer[i]==this.keyNum[j]){
+								B++;
+								}
+							}
+						}
+						input+=this.userAnswer[i];
+					} 
+					
+					//alert(this.keyNum)
+					$("tips").value+="你的输入："+input+"\r\n";
+					$("tips").value+="结果："+A+"A--"+B+"B"+"\r\n";
+					this.cleanInput();
+ 					if(A==model){this.win();}	
+					//return A+"A--"+B+"B";
+	           },
+	cleanInput:function(){
+		       		for(var i=0;i<this.user.childNodes.length;i++){
+						this.user.childNodes[i].value = "";					
+					}		   
+			   },
+			   
+	win:function(){
+		       	    $("tips").value="you win!!!";
+					alert("you win!!");
+					var keys  = $class("keynum",this.key);
+					for(var i=0;i<keys.length;i++){
+						keys[i].innerHTML = this.keyNum[i];
+					
+					}
+			   
+			   
+			   
+			   }
+
+	
+}
+
+
+
+</script>
+
+</head>
+
+<body>
+<div class="gamearea" id="gamearea" style="">
+<div class="key">
+<div class="keylabel">The key:</div>
+<!--<div class="keynum">?</div>-->
+</div>
+
+<div class="user">
+<div class="userlabel">guess:</div>
+<div class="usernumarea">
+<!--<input class="usernum"/>-->
+</div>
+</div>
+
+
+<div class="gobutton" id="gobutton">
+go！
+</div>
+<div class="gobutton" id="replaybutton">
+replay
+</div>
+<div class="gobutton" id="exitbutton">
+exit
+</div>
+
+</div>
+
+
+
+<div class="choosemodel" id="choosemodel" style="display:none">
+<div class="label">数字个数:</div>
+<select type="text" id="model">
+<option value ="2">2</option>
+<option value ="3">3</option>
+<option value ="4">4</option>
+<option value ="5">5</option>
+<option value ="6">6</option>
+</select>
+<input type="button" value="start" id="start">
+</div>
+
+
+
+<textarea cols="20" rows="11" class="tips" id="tips"></textarea>
+</body>
+</html>

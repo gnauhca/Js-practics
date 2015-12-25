@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title>操作样式</title>
+  <meta http-equiv = 'content-type' content ="text/html;charset=utf-8;">
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <style>
+  *{margin:0;}
+
+
+  </style>
+  <script type="text/javascript" src="jquery.js"></script> 
+  <script text='javascript'>
+$(function(){
+	$(":button").click(function(){
+		alert($(window).scrollTop())
+	})
+
+});
+  </script>
+ </head>
+ <body style="height:8000px;">
+	<input type="button" value="弹出滚动条离顶部的距离" style="position:fixed;top:100px;"/>
+ </body>
+</html>

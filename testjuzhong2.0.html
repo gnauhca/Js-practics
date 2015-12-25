@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>淘宝固定导航</title>
+<style type="text/css">
+*{margin:0;padding: 0;}
+.div1{width:400px; height:400px; background: red; position:absolute;left: 50%;margin-left: -200px; }
+ul,li{list-style: none;}
+.box{margin:0 auto; width:800px; border:1px solid #000;}
+.box li{float:left; width:170px;height:170px; position:relative;}
+.box li img{width:150px; height:150px;padding:10px; position:absolute; left:50%; top:50%; margin-left: -85px; margin-top:-85px;}
+</style>
+<script type="text/javascript">
+window.onload = function(){
+	var div = document.getElementById('box');
+
+	div.onmouseover=function(event){
+		zzcAni(event,1);
+	};
+	div.onmouseout=function(event){
+		zzcAni(event,-1);
+	};
+
+	var zzcAni = (function(){
+		var speed = 10;
+		var mul = 1.5;		
+		var iniWidth=150;
+		var iniHeight=150;
+		var iniPadding = 10;
+		var iniOffsetWidth = iniWidth+iniPadding*2;
+		var inioffsetHeight = iniHeight+iniPadding*2;
+		var limitPadding = iniPadding;
+		var limitWidth = iniWidth*mul;
+		var limitHeight = iniHeight*mul;
+		var limitOffsetWidth = limitWidth+limitPadding*2;
+		var limitOffsetHeight = limitHeight+limitPadding*2;
+		return function(event,flag){
+			event = event||window.event;
+			var ele = event.target||event.srcElement;
+			var eleName = ele.tagName||ele.nodeName;
+
+
+			if(eleName.toLowerCase()!='img'){
+				return;
+			}else{
+				var thisLimitPadding,thisLimitWidth,thisLimitOffsetWidth,thisLimitHeight,thisLimitOffsetHeight;
+				if(flag==1){
+					ele.style.zIndex = 10;
+					thisLimitPadding = limitPadding;
+					thisLimitWidth = limitWidth;
+					thisLimitOffsetWidth = limitOffsetWidth;
+					thisLimitHeight = limitHeight;
+					thisLimitOffsetHeight = limitOffsetHeight;
+				}else{
+					ele.style.zIndex = 0;
+					thisLimitPadding = iniPadding;
+					thisLimitWidth = iniWidth ;
+					thisLimitOffsetWidth = iniOffsetWidth;
+					thisLimitHeight = iniHeight;
+					thisLimitOffsetHeight = inioffsetHeight;					
+				}
+				
+				if(ele.timeT)
+				clearInterval(ele.timeT);
+				
+				var speedB = speed;
+				
+				ele.timeT = setInterval(function(){
+					if(ele.offsetWidth>limitOffsetWidth||ele.offsetWidth<iniOffsetWidth){
+						clearInterval(ele.timeT);
+						ele.style.width = thisLimitWidth+'px';
+						ele.style.marginLeft = -thisLimitOffsetWidth/2+'px';
+						ele.style.height = thisLimitHeight+'px';
+						ele.style.marginTop = -thisLimitOffsetHeight/2+'px';						
+					}else{
+						ele.style.width = ele.offsetWidth-thisLimitPadding*2+flag*(speedB)+'px';
+						ele.style.marginLeft = -ele.offsetWidth/2+'px';
+						ele.style.height = ele.offsetHeight-thisLimitPadding*2+flag*(speedB)+'px';
+						ele.style.marginTop = -ele.offsetHeight/2+'px';
+						speedB-=0.2;
+					}
+					
+				},10)
+			}
+		}
+	})();
+
+
+
+
+}
+
+</script>
+</head>
+
+<body>
+<div id='tip' style='position:fixed; top:19px; left:1px; width:200px; border:2px solid #abdedf'></div>
+<div class="box" id='box'>
+	<ul>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+	</ul>
+</div>
+
+
+</body>
+</html>

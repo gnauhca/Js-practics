@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title>查看修改删除</title>
+  <meta http-equiv = 'content-type' content ="text/html;charset=utf-8;">
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <style>
+  *{margin:0;}
+  tr{height:30px;}
+  td,th{border:1px solid #666;width:150px;}
+  a{color:red;}
+  .popDiv{
+	width:500px;
+	padding:10px;
+	border:1px solid red;
+	position:absolute;
+	left:50%;
+	top:150px;
+	margin-left:-250px;
+	background:white;
+	display:none;
+	z-index:1;
+  }
+  .popDiv p{border-bottom:1px solid red;margin-bottom:10px;}
+  .popDiv a{position:absolute;right:1px;top:1px;}
+  .mask{
+  position:absolute;
+  top:0px;
+  left:0px;
+  width:100%; height:100%;background:#666;
+  opacity:0.4;
+  filter:alpha(opacity=40);
+  }
+  </style>
+  <script type="text/javascript" src="jquery.js"></script> 
+  <script text='javascript'>
+$(function(){
+	$(".view").click(function(){
+		var arr=[];
+		$(this).parent().siblings().each(function(){
+			//alert($(this).text());
+			arr.push($(this).text());
+		})
+		//alert(arr)
+		$(".popDiv span").each(function(i){
+			$(this).text(arr[i++])
+		})
+		showmask();
+		$(".popDiv").show();
+	})
+
+	$(".popDiv a").click(function(){
+		$(".mask").remove();
+		$(".popDiv").hide();
+	});
+	//删除
+	$(".del").click(function(){
+		$(this).parents("tr").remove();
+	})
+
+});
+
+
+function showmask(){
+	if($(".mask").length){$(".mask").remove();}
+	var mask=$("<div class='mask'></div>");		
+	mask.css({"width":$(document).width(),"height":$(document).height()});
+	mask.appendTo($("body"));
+}
+  </script> 
+ </head>
+ <body>
+	<table>
+		<tr>
+			<th>姓名</th>
+			<th>年龄</th>
+			<th>职位</th>
+			<th>工资</th>
+			<th>操作</th>
+		</tr>
+		<tr>
+			<td>张三</td>
+			<td>23</td>
+			<td>前端工程师</td>
+			<td>6000</td>
+			<td><a href="#" class="view">查看</a><a href="#" class="del">删除</a><a href="#">修改</a></td>
+		</tr>
+		<tr>
+			<td>李四</td>
+			<td>26</td>
+			<td>java工程师</td>
+			<td>12000</td>
+			<td><a href="#" class="view">查看</a><a href="#" class="del">删除</a><a href="#">修改</a></td>
+		</tr>
+		<tr>
+			<td>王五</td>
+			<td>22</td>
+			<td>前端设计师</td>
+			<td>26000</td>
+			<td><a href="#" class="view">查看</a><a href="#" class="del">删除</a><a href="#">修改</a></td>
+		</tr>
+
+<div class="popDiv">
+<p><strong>姓名</strong><span></span></p>
+<p><strong>年龄</strong><span></span></p>
+<p><strong>职位</strong><span></span></p>
+<p><strong>工资</strong><span></span></p>
+<a href="#">close</a>
+</div>
+	</table>
+ </body>
+</html>

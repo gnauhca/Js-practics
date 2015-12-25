@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>taozhuang</title>
+<style type="text/css">
+*{margin:0; padding:0; list-style: none;}
+#orderSltWrap{width:300px;font-family:"MicroSoft YaHei"; font-size:20px;margin:100px 0 0 200px;text-indent: 1em;}
+#orderSltRes{width:300px;height:40px;color:#008000; background: #EFEFEF;line-height: 40px;}
+#orderSltResTxt{background:#006600; padding:0 12px; color: #fff; height:40px; width:140px;display: block;float:left;}
+#orderSltBtn{height:40px;float: right;padding-right:30px; }
+#orderSltBox{position:relative;color:#fff;}
+#orderSltBox li{position:absolute;width:300px;height:30px; line-height: 30px; background:#4DB849;}
+#orderSltjt{top:0px;left:0px;}
+#orderSltp57{top:32px;left:0px;}
+#orderSlt360{top:64px;left:0px;}
+#orderSltjs{top:96px;left:0px;}
+#orderSltmc{top:128px;left:0px;}
+#orderSltzh{top:128px;left:0px;}
+</style>
+
+</head>
+
+<body>
+	<div id="orderSltWrap">
+		<div id="orderSltRes"><span id="orderSltResTxt">简亭减肥胶囊</span><span id="orderSltBtn">>其他</span></div>
+		<ul id="orderSltBox">
+			<li id="orderSltjt">简亭减肥胶囊</li>		
+			<li id="orderSltp57">超级p57</li>
+			<li id="orderSlt360">左旋360</li>
+			<li id="orderSltjs">水果酵素</li>
+			<li id="orderSltmc">魔茶贴</li>
+			<li id="orderSltzh">臻好减肥茶</li>		
+		</ul>
+	</div>
+<script>
+	(function(){
+		var starBtn = document.getElementById("orderSltBtn");
+		var items = document.getElementById("orderSltBox").getElementsByTagName("li");
+		var gapTime = 100;
+		var speed = 2;
+		var initLeft = -100;
+		var init = function(){
+			starBtn.onclick = function(){
+				aniGo();
+			}
+		}
+		var aniGo = function(){
+			for (var i = items.length - 1; i >= 0; i--) {
+				items[i].style.left=initLeft+"px";
+			}
+			var index = 0;
+			var t = setInterval(function(){
+				if(index<items.length){console.log(index)
+					moveItem(items[index]);
+					index++;
+				}else{
+					clearTimeout(t);
+					return;
+				}
+			},gapTime);
+		}
+		var moveItem = function(item){
+			var left = parseInt(item.style.left);
+			var t = setInterval(function(){
+				if(left<0){
+					left+=speed;
+					item.style.left = left+"px";
+				}else{
+					clearInterval(t);
+				}
+			});
+		}
+		init();
+	})()
+</script>
+</body>
+</html>

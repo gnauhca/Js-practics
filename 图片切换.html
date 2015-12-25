@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title> New Document </title>
+<meta name="Generator" content="EditPlus">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<meta http-equiv='content-type' content='text/html;charset=utf-8'>
+<style type='text/css'>
+*{margin:0;padding:0;}
+#outbox{border:1px solid #abcdef; width:490px;height:110px; overflow:hidden;position:relative;margin:0 auto;}
+#outbox img{width:110px;height:110px;display:block;float:left;margin-left:5px;}
+
+#outbox ul{position:absolute;left:0;width:600px }
+#outbox li{float:left;margin-left:5px;list-style:none}
+
+</style>
+<script src='jquery.js'></script>
+<script type='text/javascript'>
+window.onload=function(){
+	//alert(inUl.getElementsByTagName('li').length*117+'px');
+	//inUl.style.width=inUl.getElementsByTagName('li').length*117+'px';
+	function SliceBox(outBox,inBox,num,speed){
+		this.init(outBox,inBox,num,speed);
+	}
+
+	SliceBox.prototype={
+		init:function(outBox,inBox,num,speed){	
+			this.outBox=outBox;
+			this.inBox=inBox;
+			this.inEle=inBox.getElementsByTagName('li');
+			this.step=inBox.offsetWidth/num;//alert(step)
+			this.speed=speed;
+			this.autoPlay();
+	
+		},
+		play:function(){
+			
+				this.inBox.style.left=-this.step+parseInt(this.inBox.style.left?this.inBox.style.left:0)+'px';
+				this.inBox.insertBefore(this.inBox.removeChild(this.inEle[this.inEle.length-1]),this.inEle[0]);	
+				//this.inBox.appendChild(this.inBox.removeChild(this.inEle[0]));	
+				var that=this;
+				if(this.t){clearInterval(this.t)}
+				this.t=setInterval(function(){
+					(function(){
+						if(-parseInt(this.inBox.style.left)<=0){
+							this.inBox.style.left=0+'px';
+							clearInterval(this.t);
+						}else{
+							
+							this.inBox.style.left=parseInt(this.inBox.style.left)+this.speed+'px';
+						}
+					}).call(that);				
+				
+				},10);
+			
+		},
+		autoPlay:function(){
+			var that=this;
+			this.autoT=setInterval(function(){
+				that.play();
+			},2000)
+		}
+	}
+	
+	var sliceBox=new SliceBox(outbox,inUl,5,3);
+    btn.onclick=function(){sliceBox.play()}
+
+
+}
+
+</script>
+</head>
+
+<body>
+<div id='outbox'>
+<ul id='inUl'>
+<li><img src='pic/1.jpg'/></li>
+<li><img src='pic/2.jpg'/></li>
+<li><img src='pic/3.jpg'/></li>
+<li><img src='pic/4.jpg'/></li>
+<li><img src='pic/5.jpg'/></li>
+
+</ul>
+</div>
+<input type='button' value='next' id='btn'>
+
+
+</body>
+</html>

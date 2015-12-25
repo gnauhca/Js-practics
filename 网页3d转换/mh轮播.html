@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>mhlunbo</title>
+<style type="text/css">
+*{margin:0;padding: 0;}
+ul,li{list-style: none;}
+.play_area{margin:0 auto; margin-top:50px;width:380px; height: 400px;border:1px solid #000; overflow: hidden; position:relative;}
+.box{margin:0 auto; width:300px; margin-top: 24px; height: 350px;border:1px solid #000; overflow: hidden; position:relative;}
+.scrollBox{height:300px; }
+.scrollBox li{float:left; width:290px;height:300px; border:1px solid #edfabc; margin:0 4px;}
+.scrollBox li img{width:290px; height:350px;}
+.play_area span{display:inline; font-size: 50px; cursor:pointer;}
+#lbtn{position:absolute;top:140px; left:4px;}
+#rbtn{position:absolute;top:140px; right:4px;}
+</style>
+
+</head>
+
+<body>
+<div style="margin:0 auto;margin-top:20px; width:280px;">
+waitTime:
+<div id='tip' style='width:150px; border:2px solid #abdedf; float:right'>
+	<div id="waitBarEle" style = "height:15px; width:0px; background:#86b;"></div>
+</div>
+</div>
+
+<div style="margin:0 auto;margin-top:20px; width:280px;">
+playTime:
+<div id='tip' style='width:150px; border:2px solid #abdedf; float:right'>
+	<div id="playBarEle" style = "height:15px; width:0px; background:#37b;"></div>
+</div>
+</div>
+
+<div class = "play_area">
+	<span id="lbtn" href=" javascript:void(0)"><</span>
+	<span id="rbtn" href=" javascript:void(0)">></span>
+<div class="box" id="outBox">
+
+	<ul class="scrollBox" id="scrollBox">
+
+		<li><img src="pic/01.jpg" alt=""></li>
+		<li><img src="pic/02.jpg" alt=""></li>
+		<li><img src="pic/03.jpg" alt=""></li>
+		<li><img src="pic/04.jpg" alt=""></li>
+		<li><img src="pic/07.jpg" alt=""></li>
+		<li><img src="pic/06.jpg" alt=""></li>
+	</ul>
+</div>
+</div>
+
+<script type="text/javascript">
+var mhLunBo = function(outBoxId,scrollBoxId,scrollItemName,lBtnId,rBtnId,direction,playFun,waitFun){
+	var outBox = document.getElementById(outBoxId);
+	var scrollBox = document.getElementById(scrollBoxId);//alert(scrollBox)
+	var items = scrollBox.getElementsByTagName(scrollItemName);
+	var lBtn = document.getElementById(lBtnId);
+	var rBtn = document.getElementById(rBtnId);
+	var playFun = playFun;
+	var waitFun = waitFun;
+	var itemMgn = 4;
+	var dir = direction; //1forleft
+	var waitTime = 2000; //million second
+	var speedForAuto = 4; 
+	var speedForHand= 20;
+	var speed;
+	var play_time;
+	var onePlayFinish = true;
+	var init = function(){
+		scrollBox.style.width=(items[0].offsetWidth+2*itemMgn)*items.length+"px";//alert(items[0].offsetWidth)
+		//alert(scrollBox.style.width)
+		lBtn.onclick = function(){
+			playLeft();playRightNow();
+		}
+		rBtn.onclick = function(){
+			playRight();playRightNow();
+		}
+		playAuto();
+		n_play();
+	}
+	var stop = function(){}
+	var start = function(){}
+	var play = function(){
+		onePlayFinish = false;
+		play_time = setInterval(function(){
+			    playFun(((outBox.clientWidth+dir*outBox.scrollLeft)%outBox.clientWidth)/outBox.clientWidth);
+				if(dir==1){					
+					if(parseInt(outBox.scrollLeft)<parseInt(outBox.clientWidth)){						
+						outBox.scrollLeft += speed;
+					}else{
+						outBox.scrollLeft=0;
+						scrollBox.appendChild(scrollBox.removeChild(items[0]));
+						clearInterval(play_time);
+						onePlayFinish = true;					
+						playAuto();		
+						n_play(waitTime);
+					}
+				}else{						
+					if(parseInt(outBox.scrollLeft)>0){
+						outBox.scrollLeft -= speed;
+					}else{
+						clearInterval(play_time);	
+						onePlayFinish = true;					
+						playAuto();		
+						n_play(waitTime);
+					}
+				}
+		},30)
+	}
+	var playLeft = function(){
+		speed = speedForHand;		
+		outBox.scrollLeft += (outBox.clientWidth-outBox.scrollLeft)%speedForHand	
+		dir = 1;
+	}
+	var playRight = function(){		
+		outBox.scrollLeft -=	outBox.scrollLeft%speedForHand;
+		speed = speedForHand;		
+		dir = -1;
+	}
+	var playRightNow = function(){
+		if(onePlayFinish){
+			clearInterval(autoPlayTime);
+			waitFun(0);
+			//console.log(speed+"   "+dir+"   ")
+			n_play(0);
+		}
+	}
+	var playAuto = function(){
+		speed = speedForAuto;
+		dir = direction;		
+	}
+	var n_play = function(n_waitTime){
+		var waitTime = 0;		
+		autoPlayTime = setInterval(function(){
+			if(n_waitTime!=0&&waitTime<n_waitTime){
+				waitTime+=20
+				waitFun(waitTime/n_waitTime);
+				return;
+			}
+			waitFun(0);
+			clearInterval(autoPlayTime)
+			if(dir==-1 ){
+				scrollBox.insertBefore(scrollBox.removeChild(items[items.length-1]),items[0]);					
+				outBox.scrollLeft=outBox.clientWidth;			}
+			play();
+		},30);
+	}
+
+	init();	
+	
+}
+mhLunBo("outBox","scrollBox","li","lbtn","rbtn",1,playBar,waitBar);
+
+function waitBar(percent){
+	waitBarEle.style.width = percent*100+"%";
+}
+function playBar(percent){
+	playBarEle.style.width = percent*100+"%";
+
+}
+</script>
+<script src="to3d.js"></script>
+</body>
+</html>

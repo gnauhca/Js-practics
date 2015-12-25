@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>柱状轮播</title>
+<style>
+*{margin:0; padding:0;}
+body {font-family: "microsoft yahei"; background-image: radial-gradient(circle at center, #ccc 0%, #022627 100%);}
+.state { perspective: 1000px;position: relative; width:800px; height: 400px; margin:50px auto; padding: 50px 0; box-shadow: inset 0 0 20px #333;}
+.itemwrap {position: relative; width: 800px; height: 400px; transform-style: preserve-3d; transform: translateZ(-200px); transition: transform 1s ease, opacity 1s ease; }
+.item {position: absolute; top: 0; left: 0; width: 800px; height: 400px; outline: 2px solid #ccc; z-index: 99; font-size: 50px; line-height: 400px; text-align: center; background: #fffF; opacity: 0.5}
+.item:nth-child(1) {transform: rotateX(0deg) translateZ(200px);}
+.item:nth-child(2) {transform: rotateX(270deg) translateZ(200px);}
+.item:nth-child(3) {transform: rotateX(180deg) translateZ(200px);}
+.item:nth-child(4) {transform: rotateX(90deg) translateZ(200px);}
+
+.up {z-index: 100; opacity: 1;}
+
+.iconwrap {position: absolute; top: 50%; left: -70px; width: 70px; height: 200px; margin-top: -100px; overflow: hidden;}
+.iconwrap>span {display: block; width: 60px; height: 40px; padding-left: 10px; margin: 5px 0; margin-left: 30px;background: #333; border-radius: 10px 0 0 10px; box-shadow: 0 1px 3px #000; transition: margin-left 0.2s;  color: #eee; line-height: 40px; cursor: pointer;}
+.iconwrap>span:hover, .iconwrap>span.active { margin-left: 10px;}
+</style>
+</head>
+<body>
+	<div class="state">
+		<div class="itemwrap" id="itemwrap">
+			<div class="item">1</div>
+			<div class="item">2</div>
+			<div class="item">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3</div>
+			<div class="item">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4</div>		
+		</div>
+		<div class="iconwrap" id="iconwrap">
+			<span>1</span>
+			<span>2</span>
+			<span>3</span>
+			<span>4</span>
+		</div>
+	</div>
+<script>
+(function() {
+	var itemwrap = document.getElementById("itemwrap"),
+		iconwrap = document.getElementById("iconwrap"),
+		items = itemwrap.getElementsByTagName("div"),
+		icons = iconwrap.getElementsByTagName("span"),
+		playIndex = 0;
+		playIndexPre = 0;
+		autoT = 0,
+		gapTime = 2000;
+
+	function init() {
+		initEvent();
+		play();
+	}
+
+	function initEvent() {
+		iconwrap.onclick = function(event) {
+			var event = event || window.event; console.log(event.target);
+			if (event.target.tagName.toLowerCase() == "span") {
+				for (var i = 0; i < icons.length; i++) {
+					if (icons[i] == event.target) {
+						clearTimeout(autoT);
+						playIndex = i;
+						play();
+					}
+				}
+			}
+		};
+	}
+
+	function changeItem(index) {
+		if (items[index].className.indexOf("up") != -1) {
+			return;
+		} else {
+			items[index].className = items[index].className + " up";
+			icons[index].className = icons[index].className + " active";
+			itemwrap.style.transform = "translateZ(-300px) rotateX(" + index*90 + "deg)";
+			if (playIndexPre != index) {
+				items[playIndexPre].className = items[playIndexPre].className.replace(/\sup/, "");
+				icons[playIndexPre].className = icons[playIndexPre].className.replace(/\sactive/, "");
+			}
+		}
+	}
+
+	function play() {
+		changeItem(playIndex);
+		playIndexPre = playIndex;
+		playIndex = (playIndex + 1) % 4;
+		autoT = setTimeout(arguments.callee, gapTime);
+	}
+
+	init();
+})();
+</script>
+</body>
+</html>

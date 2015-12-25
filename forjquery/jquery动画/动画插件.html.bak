@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title>基础动画</title>
+  <meta http-equiv = 'content-type' content ="text/html;charset=utf-8;">
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <style>
+  div{
+	width:50px;
+	height:50px;
+	position:absolute;
+	left:10px;
+	top:40px;
+	background:#abcdef;
+  }
+  </style>
+  <script type="text/javascript" src="jquery.js"></script> 
+  <script type="text/javascript" src="easing.js"></script> 
+  <script text='javascript'>
+$(function(){
+	$("a").click(function(){
+		//$("div").hide(1600,"easeInOutBounce");
+		$("div").animate({left:'+=200',top:'+=200'},5000,"easeOutElastic");
+	});
+
+});
+  </script>
+ </head>
+ <body >
+ <a href="#">点击</a>
+<div></div>
+ </body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title>操作样式</title>
+  <meta http-equiv = 'content-type' content ="text/html;charset=utf-8;">
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <style>
+  *{margin:0;}
+  div{
+  position:relative;
+  left:20px;
+  top:20px;
+  width:200px;
+  height:200px;
+  background:red;
+  }
+  p{
+  position:absolute;
+  left:100px;
+  top:50px;
+  width:50px;
+  height:50px;
+  background:yellow;
+  }
+
+  </style>
+  <script type="text/javascript" src="jquery.js"></script> 
+  <script text='javascript'>
+$(function(){
+	alert("offset left(相对浏览器窗口)  "+$("p").offset().left)
+	alert("position left(相对（有定位的）父元素)  "+$("p").position().left)
+
+});
+  </script>
+ </head>
+ <body >
+<div>divdiv
+	<p>PPPPP</p>
+</div>
+ </body>
+</html>

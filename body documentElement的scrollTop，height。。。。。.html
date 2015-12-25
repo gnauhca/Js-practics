@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title> New Document </title>
+<meta name="Generator" content="EditPlus">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<meta http-equiv='content-type' content='text/html;charset=utf-8'>
+<style type='text/css'>
+*{margin:0;padding:0;}
+
+</style>
+
+<script type='text/javascript'>
+window.onload=function(){
+	var div1=document.getElementsByTagName('div')[0];
+	div1.style.left=(document.documentElement.clientWidth-div1.clientWidth)/2+'px'
+
+	window.onscroll=function(){
+		tip.innerHTML='纵向-------------------------------------------<br/>'+
+					  'document.body.scrollTop               :'+document.body.scrollTop+'<br/>'+
+					  'document.body.scrollHeight            :'+document.body.scrollHeight+'<br/>'+
+					  'document.body.clientHeight            :'+document.body.clientHeight+'<br/>'+
+					  'document.body.offsetTop				 :'+document.body.offsetTop+'<br/>'+
+					  'document.body.offsetHeight			 :'+document.body.offsetHeight+'<br/>'+
+					  'document.documentElement.scrollTop	 :'+document.documentElement.scrollTop+'<br/>'+
+					  'document.documentElement.scrollHeight :'+document.documentElement.scrollHeight+'<br/>'+
+					  'document.documentElement.clientHeight :'+document.documentElement.clientHeight+'<br/>'+
+					  'document.documentElement.offsetTop	 :'+document.documentElement.offsetTop+'<br/>'+
+					  'document.documentElement.offsetHeight :'+document.documentElement.offsetHeight+'<br/>'+
+					  '横向-------------------------------------------<br/>'+
+					  'document.body.scrollLeft				 :'+document.body.scrollLeft+'<br/>'+
+					  'document.body.scrollWidth			 :'+document.body.scrollWidth+'<br/>'+
+					  'document.body.clientWidth			 :'+document.body.clientWidth+'<br/>'+
+					  'document.body.offsetLeft				 :'+document.body.offsetLeft+'<br/>'+
+					  'document.body.offsetWidth			 :'+document.body.offsetWidth+'<br/>'+
+					  'document.documentElement.scrollLeft   :'+document.documentElement.scrollLeft+'<br/>'+
+					  'document.documentElement.scrollWidth  :'+document.documentElement.scrollWidth+'<br/>'+
+					  'document.documentElement.clientWidth  :'+document.documentElement.clientWidth+'<br/>'+
+					  'document.documentElement.offsetLeft   :'+document.documentElement.offsetLeft+'<br/>'+
+					  'document.documentElement.offsetWidth  :'+document.documentElement.offsetWidth+'<br/>'
+
+
+	};
+
+	
+}
+</script>
+</head>
+
+<body style='border:10px solid red;width:2200px; height:2200px;'>
+<div style='position:fixed;width:550px;height:480px;left:300px; top:50px; border:1px #abcdef solid;color:red;'>
+<p style='color:#333;font-size:20px; margin:3px;'>body属性border:10px solid red;width:2200px; height:2200px;</p>
+<span id='tip' style="display:block;width:300px;height:300px; margin:10px;"></span>
+
+</div>
+
+
+</body>
+</html>

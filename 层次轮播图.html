@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>层次轮播图</title>
+<style type="text/css">
+*{margin:0; padding:0;}
+.outBox{width:1000px; height:500px; border:2px solid #abcdef; margin:0 auto;margin-top:50px;position: relative;}
+.innerBox{display:none;}
+.innerBox img{width: 100%;height: 100%}
+</style>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+window.onload=function(){
+	var playItems = document.getElementById('outBox').getElementsByTagName('div');
+	var playBox = new PlayBox(playItems);
+	btn.onclick = function(){playBox.play()};
+}
+var PlayBox = function(items){
+	this.zIndexA=10;
+	this.playItems = items;
+	this.playItemArr=new Array();
+	this.playItemConfs = [{
+		width:'50%',
+		height:'80%',
+		left:'25%',
+		top:'10%',
+		zIndex:this.zIndexA+5
+	},{
+		width:'37.5%',
+		height:'60%',
+		left:'15%',
+		top:'20%',
+		zIndex:this.zIndexA+4
+	
+	},{
+		width:'28%',
+		height:'45%',
+		left:'8%',
+		top:'27.5%',
+		zIndex:this.zIndexA+2
+	
+	},{
+		width:'28%',
+		height:'45%',
+		left:'64%',
+		top:'27.5%',
+		zIndex:this.zIndexA+2
+	
+	},{
+		width:'37.5%',
+		height:'60%',
+		left:'47.5%',
+		top:'20%',
+		zIndex:this.zIndexA+3
+	
+	}];
+	this.init();
+}
+PlayBox.prototype = {
+	init:function(){
+		for(var i =0; i<this.playItems.length;i++){
+			this.playItems[i].style.position='absolute';
+			this.playItems[i].style.width=this.playItemConfs[i].width;
+			this.playItems[i].style.height=this.playItemConfs[i].height;
+			this.playItems[i].style.top=this.playItemConfs[i].top;
+			this.playItems[i].style.zIndex=this.playItemConfs[i].zIndex;	
+			this.playItems[i].style.left=this.playItemConfs[i].left;			
+			this.playItems[i].style.display='inline';
+			this.playItemArr.push(this.playItems[i]);
+		}
+	},
+	play:function(){
+		this.playItemArr[this.playItemArr.length-1].parentNode.appendChild(this.playItemArr[0])
+		for(var i =this.playItemArr.length-1; i>=0;i--){			
+			var conf = this.playItemConfs[(i-1)<0?4:i-1];
+			confObj = {
+				width:conf.width,
+				height:conf.height,
+				top:conf.top,
+				left:conf.left
+			}
+			$(this.playItemArr[i]).stop(true,true).animate(confObj,600);
+			this.playItemArr[i].style.zIndex = conf.zIndex;
+		}
+
+		this.playItemArr.push(this.playItemArr.shift());
+	}
+}
+</script>
+
+</head>
+<body>
+<div class="outBox" id="outBox">
+	<div class='innerBox'><img src="pic/0 (1).png" alt=""></div>
+	<div class='innerBox'><img src="pic/0 (2).png" alt=""></div>
+	<div class='innerBox'><img src="pic/0 (3).png" alt=""></div>
+	<div class='innerBox'><img src="pic/0 (4).png" alt=""></div>
+	<div class='innerBox'><img src="pic/0 (5).png" alt=""></div>
+</div>
+<input type="button" value="play" id = 'btn' style='position:fixed;top:100px; left:200px;'/>
+</body>
+</html>

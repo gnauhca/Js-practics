@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>淘宝固定导航</title>
+<style type="text/css">
+*{margin:0;padding: 0;}
+.div1{width:400px; height:400px; background: red; position:absolute;left: 50%;margin-left: -200px; }
+ul,li{list-style: none;}
+.box{margin:0 auto; width:800px; border:1px solid #000;}
+.box li{float:left; width:170px;height:170px; position:relative;}
+.box li img{width:150px; height:150px;padding:10px; position:absolute;}
+</style>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+	var div = $('.box');
+	var nowWidth=170;
+	var nowHeight=170;
+	var imgPadding =10;
+	var speed = 5;
+	div.mouseover(function(event){
+		
+		var ele = event.target;
+		var eleName = ele.tagName||ele.nodeName;
+		if(eleName.toLowerCase()!='img'){
+			return;
+		}else{
+			
+			ele.style.zIndex = 10;
+			ele.style.left = '50%';
+			ele.style.top = '50%';
+			ele.style.marginLeft = -nowWidth/2+'px';
+			ele.style.marginTop = -nowHeight/2+'px';			
+			var zzct = function(){
+				if(ele.offsetWidth<1.4*nowWidth){
+
+					ele.style.width = ele.offsetWidth+speed-10*2+'px';
+					ele.style.marginLeft = -ele.offsetWidth/2+'px';
+					ele.style.height = ele.offsetHeight+speed-10*2+'px';
+					ele.style.marginTop = -ele.offsetHeight/2+'px';
+					ele.zzct = setTimeout(function(){zzct();},5);
+				}
+				tip.innerHTML = 'offsetWidth:   '+ ele.offsetWidth+'<br/>'+
+								'clientWidth:   '+ele.clientWidth+'<br/>'
+			}
+			clearInterval(ele.zzct);
+			zzct();
+
+		}
+	});
+		div.mouseout(function(event){
+		var ele = event.target;
+		var eleName = ele.tagName||ele.nodeName;
+		if(eleName.toLowerCase()!='img'){
+			return;
+		}else{
+
+			ele.style.zIndex = 0;
+			clearTimeout(ele.zzct)
+			ele.zzct = setInterval(function(){
+				if(ele.offsetWidth<nowWidth){
+					clearInterval(ele.zzct);
+				}else{
+					ele.style.width = (ele.offsetWidth-speed-10*2)+'px';
+					ele.style.marginLeft = -ele.offsetWidth/2+'px';
+					ele.style.height = ele.offsetHeight-speed-10*2+'px';
+					ele.style.marginTop = -ele.offsetHeight/2+'px';
+				}
+			},5)
+		}
+
+	})
+
+
+
+
+});
+
+</script>
+</head>
+
+<body>
+<div id='tip' style='position:fixed; top:19px; left:1px; width:200px; border:2px solid #abdedf'></div>
+<div class="box">
+	<ul>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+		<li><img src="pic/1.jpg" alt=""></li>
+	</ul>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>scrollbar</title>
+<style>
+body.no-select { -moz-user-select: none; -webkit-user-select: none; user-select: none; cursor: pointer; }
+.scrollbarbox {position:absolute; right:0; top:0; width:14px; height:100%; background:none; transition:all 0.5s; opacity:0; filter:alpha(opacity=0);}
+.scrollbar {position:absolute; right:2px; top:0; width:10px; height:50px; background:#333; cursor:pointer; border-radius: 4px}
+.scrollbarbox.scrollbarboxshow {opacity: 0.5; filter:alpha(opacity=50);}
+</style>
+</head>
+<body>
+	<div style="position:relative;display:inline-block;">
+		<div id="outbox1" style="width:200px; height:300px; border:5px solid #B6B6B6; position:relative; overflow:hidden;">
+			<div id="inbox1" style="position:absolute; top:0px; left:0px;width:200px; height:800px; background:#dbfeac;" >
+					1324245256367457879  689678  91324245256367457879689678913  24245256367457879689  67891324245256367  45787 968967891324245256367457879  68967891324245  256367457879689  678913242452563674 5787968967891324245256 3674 57879 689678913 2424525  63674578796 896789132424 52563674578 7968967891324 24525636745787  96896789132424 525636745787 68967891324245 2563674 578796  896789132424525636745787968967891324245256  367457879689678913242452563  674578796896789132 4245256367457879 6896789 132424525636745787  96896789132 4245256367457 879 68967 891324245  256367457 879689 678913 24245256367457 87968967891 3242452563674578 796896789132424 2563674578796 896789 1324245 25636745  78  796896789132424525636  745787968967891324245 2563674578 79689 6789132424525636745787968 8796896789 13 24245256367  457879689   67891324245256  3674578 7968967  891324245 56367457879 68967891 242452563674578796896789 怎么回事
+					<hr>
+			</div>
+			<!-- <div id="scrollbarbox" class="scrollbarbox">
+					<div id="scrollbar"  class="scrollbar"></div>
+				</div> -->	
+		</div>
+	</div>
+
+
+	<div style="position:relative;display:inline-block;">
+		<div id="outbox2" style="width:200px; height:500px; border:5px solid #B6B6B6; position:relative; overflow:hidden;">
+			<div id="inbox2" style="position:absolute; top:0px; left:0px;width:200px; height:800px; background:#889;" >
+					1324245256367457879  689678  91324245256367457879689678913  24245256367457879689  67891324245256367  45787 968967891324245256367457879  68967891324245  256367457879689  678913242452563674 5787968967891324245256 3674 57879 689678913 2424525  63674578796 896789132424 52563674578 7968967891324 24525636745787  96896789132424 525636745787 68967891324245 2563674 578796  896789132424525636745787968967891324245256  367457879689678913242452563  674578796896789132 4245256367457879 6896789 132424525636745787  96896789132 4245256367457 879 68967 891324245  256367457 879689 678913 24245256367457 87968967891 3242452563674578 796896789132424 2563674578796 896789 1324245 25636745  78  796896789132424525636  745787968967891324245 2563674578 79689 6789132424525636745787968 8796896789 13 24245256367  457879689   67891324245256  3674578 7968967  891324245 56367457879 68967891 242452563674578796896789 怎么回事
+					<hr>
+			</div>
+			<!-- <div id="scrollbarbox" class="scrollbarbox">
+					<div id="scrollbar"  class="scrollbar"></div>
+				</div> -->	
+		</div>
+	</div>
+
+<script>
+var eventUtil = {
+	//添加事件
+	addHandler:function(ele,type,fun){
+		if(ele.addEventListener){
+			ele.addEventListener(type,fun,false);
+		}else if(ele.attachEvent){
+			ele.attachEvent("on"+type,fun);
+		}else{
+			ele["on"+type]=fun;
+		}
+	},
+	removeHandler : function(ele,type,fun){
+		if(ele.removeEventListener){
+			ele.removeEventListener(type,fun,false);
+		}else if(ele.detachEvent){
+			ele.detachEvent("on"+type,fun);
+		}else{
+			ele["on"+type]=null;
+		}		
+	},
+    getEvent : function(event){
+        return event ? event : window.event; 
+         
+    },
+    getTarget : function(event){
+        return event.target || event.srcElement;
+ 
+    },
+    preventDefault : function(event){
+        if(event.preventDefault){
+            event.preventDefault();
+        }else{
+            event.returnValue = false;
+        }
+    },
+ 
+    stopPropagation : function(event){
+        if(event.stopPropagation){
+            event.stopPropagation();
+        }else{
+            event.cancelBubble = true;
+        }
+    } 
+}
+
+
+var getScrollBar = (function(doc, win) {	
+
+	function ScrollBar(outbox, inbox) {
+		
+		this.outbox = outbox;
+		this.inbox = inbox;
+		this.scrollbar = document.createElement("div");
+		this.scrollbarbox = document.createElement("div");
+
+		this.scrollbar.className = "scrollbar";
+		this.scrollbarbox.className = "scrollbarbox";
+		this.scrollbar.style.top = "0px";
+		this.scrollbarbox.appendChild(this.scrollbar);
+		this.outbox.appendChild(this.scrollbarbox);
+		if (this.inbox.offsetHeight != 0) {
+			this.scrollbar.style.height = Math.ceil(this.outbox.clientHeight * (this.outbox.clientHeight/this.inbox.offsetHeight)) + "px";
+		} else {
+			this.scrollbar.style.height = "0px";
+		}
+		this.initDrag();
+	}
+
+	ScrollBar.prototype.scrollMoveTo = function (y) {
+		var newY = y,
+			maxY = this.scrollbarbox.clientHeight - this.scrollbar.offsetHeight;
+			
+		if (newY < 0) {
+			newY = 0;
+		} else if (newY > maxY) {
+			newY = maxY;
+		}
+		//console.log(this.scrollbar.offsetHeight)
+		this.scrollbar.style.top = newY + "px";
+		this.inbox.style.top = -(this.inbox.offsetHeight - this.outbox.clientHeight) * (parseFloat(this.scrollbar.style.top)/maxY) + "px";
+	}
+
+	ScrollBar.prototype.animateScrollMoveTo = function(y) {
+		var initTop = parseFloat(this.scrollbar.style.top),
+			newY = y,
+			maxY = this.scrollbarbox.clientHeight - this.scrollbar.offsetHeight,
+			distance = 0,
+			absDistance = 0,
+			step = 0;
+
+		this.aniT = 0;//定时器
+
+		if (newY < 0) {
+			newY = 0;
+		} else if (newY > maxY) {
+			newY = maxY;
+		}
+
+		distance = (newY - initTop),
+		absDistance = Math.abs(distance),
+
+		step = distance/10;
+		var that = this;
+		clearTimeout(this.aniT);
+		(function() {
+			distance -= step;
+			absDistance -= Math.abs(step);
+			if (absDistance > 0) {
+				that.scrollMoveTo(newY - distance);
+			} else {
+				that.scrollMoveTo(newY);
+				return;
+			}
+			that.aniT = setTimeout(arguments.callee, 30);
+		})();
+	}
+
+	ScrollBar.prototype.moveTo = function(percent) {
+		ScrollBar.prototype.scrollMoveTo((this.scrollbarbox.clientHeight - this.scrollbar.offsetHeight) * percent/100);
+	}
+
+	ScrollBar.prototype.showScrollBar = function() {
+		if (this.scrollbarbox.className.indexOf(" scrollbarboxshow") == -1)
+		this.scrollbarbox.className += " scrollbarboxshow";
+	}
+
+	ScrollBar.prototype.hideScrollBar = function() {
+		this.scrollbarbox.className = this.scrollbarbox.className.replace(" scrollbarboxshow", "");
+	}
+
+	ScrollBar.prototype.initDrag = function() {
+		var initCroodY = 0, 
+			initScrollY = parseFloat(this.scrollbar.style.top),
+			draging = false,
+			scrollbarObj = this;
+
+		function mousemove(_e) {
+			var _e = _e || window.event;
+			scrollbarObj.scrollMoveTo(initScrollY + _e.clientY - initCroodY);
+		}
+
+
+		this.scrollbar.onmousedown = function(e) {
+			var e = e || window.event;
+			initScrollY = parseFloat(scrollbarObj.scrollbar.style.top);
+			initCroodY = e.clientY;
+			document.body.className += " no-select";
+			document.body.onselectstart = function(event) {
+				return false;
+			}; 
+			eventUtil.addHandler(document, "mousemove", mousemove);
+			setTimeout(function() {
+				draging = true;
+			}, 150);
+			
+		}
+
+		eventUtil.addHandler(document, "mouseup", function() { //doc的事件绑定要用到dom2级
+			setTimeout(function() {draging = false;}, 180);
+			eventUtil.removeHandler(document, "mousemove", mousemove)
+			document.body.onselectstart = null;
+			scrollbarObj.hideScrollBar();
+			document.body.className = document.body.className.replace(" no-select", "");
+			//console.log(doc.onmousemove)
+		});
+
+		this.scrollbarbox.onclick = function(e) {
+			if (draging) return;
+			var e = e || window.event;
+			//scrollbarObj.scrollMoveTo(e.clientY - this.getBoundingClientRect().top - scrollbarObj.scrollbar.clientHeight/2);
+			scrollbarObj.animateScrollMoveTo(e.clientY - this.getBoundingClientRect().top - scrollbarObj.scrollbar.clientHeight/2);
+		}
+
+		/*function mouseScroll(e){
+		     e=e || window.event;
+		     console.log(e.clientY)
+		     var direct=(e.wheelDelta || e.detail);
+
+		     if(direct < 0){
+		        scrollbarObj.animateScrollMoveTo(parseFloat(scrollbarObj.scrollbar.style.top) + 40);
+		     }else {//Firefox
+		        scrollbarObj.animateScrollMoveTo(parseFloat(scrollbarObj.scrollbar.style.top) - 40);
+		     }
+		 }
+
+		eventUtil.addHandler(document, "DOMMouseScroll", mouseScroll);	
+		window.onmousewheel = document.onmousewheel = mouseScroll;	*/
+
+
+		this.outbox.onmousemove = function () {
+			scrollbarObj.showScrollBar();
+		}
+		
+		this.outbox.onmouseout = function (e) {
+			var e = e || window.event,
+				target = e.target || e.srcElement;
+			//console.log(e.target + draging)
+			if (target = this && !draging) {
+				scrollbarObj.hideScrollBar();
+			}
+		}
+	}
+
+	ScrollBar.prototype.reinit = function() {
+		if (this.outbox.clientHeight >= this.inbox.offsetHeight) {
+			this.scrollbarbox.style.display = "none";
+		} else {
+			this.scrollbarbox.style.display = "block";
+		}
+		this.scrollbar.style.height = Math.ceil(this.outbox.clientHeight * (this.outbox.clientHeight/this.inbox.offsetHeight)) + "px";//
+		this.scrollbar.style.height = (parseFloat(this.scrollbar.style.height) < 50 ? "50px" : parseFloat(this.scrollbar.style.height));
+		this.scrollbar.style.top = "0px";
+		this.inbox.style.top = "0px";
+		//initDrag();
+	}
+
+	return function(outbox, inbox) {
+		return new ScrollBar(outbox, inbox);
+	}
+
+})(document, window);
+
+
+getScrollBar(outbox1, inbox1);
+getScrollBar(outbox2, inbox2);
+
+</script>
+</body>
+</html>

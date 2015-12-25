@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title> New Document </title>
+<meta name="Generator" content="EditPlus">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<meta http-equiv='content-type' content='text/html;charset=utf-8'>
+<style type='text/css'>
+*{margin:0;padding:0;list-style:none;}
+div{margin:5px auto; width:900px;}
+ul{float:left;margin-left:10px;}
+li{width:200px;overflow:hidden;border:1px solid #abcdef;margin-bottom:5px;}
+
+</style>
+<script src='jquery.js'></script>
+<script type='text/javascript'>
+window.onload=function(){
+	var aUl=document.getElementsByTagName('ul');
+
+
+	window.onscroll=function(){
+		var viewHeight = document.documentElement.clientHeight;
+		var scrollY = document.documentElement.scrollTop||document.body.scrollTop;
+
+		for(var i=0;i<aUl.length;i++){
+			var aLi=aUl[i].getElementsByTagName('li');
+			var lastLi=aLi[aLi.length-1];
+			
+			if(posTop(lastLi)+lastLi.offsetWidth<viewHeight+scrollY){
+				var newEle = document.createElement('li')
+				newEle.style.display='none';
+				var newImg = document.createElement('img');
+				newImg.src='pic/0'+parseInt(Math.random()*10)+'.jpg';
+				newEle.appendChild(newImg);
+				aUl[i].appendChild(newEle);
+				$(newEle).fadeIn(1000);
+			}
+		}
+
+
+	};
+
+	//拿到元素距离浏览器视图区域顶部的距离
+	function posTop(obj){
+		var top = 0;
+		while(obj){
+			top+=obj.offsetTop;
+			obj=obj.offsetParent;
+		}
+
+		return top;
+
+	
+	}
+}
+</script>
+</head>
+
+<body style='border:10px solid red;'>
+<p id='tip' style='position:fixed;width:500px;left:1px;top:20px;border:1px #abcdef solid;color:red;'>
+ddddd
+</p>
+<div >
+	<ul id='ul1'>
+		<li><img src='pic/00.jpg'></li>
+		<li><img src='pic/02.jpg'></li>
+		<li><img src='pic/04.jpg'></li>
+		<li><img src='pic/08.jpg'></li>
+	</ul>
+	<ul>
+		<li><img src='pic/01.jpg'></li>
+		<li><img src='pic/04.jpg'></li>
+		<li><img src='pic/01.jpg'></li>
+		<li><img src='pic/02.jpg'></li>
+		<li><img src='pic/07.jpg'></li>
+
+	</ul>
+	<ul>
+		
+		<li><img src='pic/09.jpg'></li>
+		<li><img src='pic/04.jpg'></li>
+		<li><img src='pic/03.jpg'></li>
+		<li><img src='pic/01.jpg'></li>
+
+	</ul>
+	<ul>
+		<li><img src='pic/01.jpg'></li>
+		<li><img src='pic/04.jpg'></li>
+		<li><img src='pic/01.jpg'></li>
+		<li><img src='pic/02.jpg'></li>
+		<li><img src='pic/07.jpg'></li>
+
+	</ul>
+<div style='clear:both;'></div>
+</div>
+
+</body>
+</html>
